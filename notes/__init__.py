@@ -1,5 +1,5 @@
 from fman import DirectoryPaneCommand, show_alert
-from core.commands import _get_thirdparty_plugins, _THIRDPARTY_PLUGINS_DIR_THIRDPARTY_PLUGINS_DIR_THIRDPARTY_PLUGINS_DIR_THIRDPARTY_PLUGINS_DIR
+from core.commands import _get_thirdparty_plugins, _THIRDPARTY_PLUGINS_DIR
 from fman.url import basename, dirname
 from fman.fs import exists, mkdir
 
