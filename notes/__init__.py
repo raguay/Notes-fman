@@ -1,7 +1,7 @@
 from fman import DirectoryPaneCommand, show_alert
 from core.commands import _get_thirdparty_plugins, _THIRDPARTY_PLUGINS_DIR
 from fman.url import basename, dirname
-from fman.fs import exists, mkdir
+from fman.fs import exists, mkdir, touch
 
 #
 # Class:        Notes
@@ -45,8 +45,10 @@ class Notes (DirectoryPaneCommand):
 
         #
         # If the OpenWithEditor plugin is loaded, use it to edit 
-        # the file. Otherwise, use the system edit command.
+        # the file. Otherwise, use the system edit command. The 
+        # touch command will create the file if it doesn't exist.
         #
+        touch(cfNoteFile)
         if (_THIRDPARTY_PLUGINS_DIR + "/OpenWithEditor") in _get_thirdparty_plugins():
             self.pane.run_command("my_open_with_editor", args={'url': cfNoteFile})
         else:
