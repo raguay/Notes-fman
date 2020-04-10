@@ -15,7 +15,8 @@ file is that directory or file name with the `.md` extension.
 
 If you have the [Open With Editor](https://github.com/raguay/OpenWithEditor) plugin installed and configured, then this 
 plugin will use the editor your select with that plugin to edit the notes file.
-Otherwise, it will use the fman edit command to edit the file.
+Otherwise, it will use the fman's built-in `open_with_editor`  command to edit 
+the file with a system defined program.
 
 ### Features
 
