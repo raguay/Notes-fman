@@ -50,5 +50,5 @@ class Notes (DirectoryPaneCommand):
         if "OpenWithEditor" in _get_thirdparty_plugins():
             self.pane.run_command("my_open_with_editor", args={'url': cfNoteFile})
         else:
-            self.pane.run_command("Edit", args={'url': cfNoteFile})
+            self.pane.run_command("open_with_editor", args={'url': cfNoteFile})
 
