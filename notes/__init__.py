@@ -73,7 +73,7 @@ def saveNotesDir(newDir):
         NOTESDIR = notes.append(newDir)
         saveNotesDirDisk()
 
-def saveNotesDirDisk();
+def saveNotesDirDisk():
     global NOTESDIR, NOTESDIRNAME
     save_json(NOTESDIRNAME, NOTESDIR)
 
