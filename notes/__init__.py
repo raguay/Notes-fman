@@ -141,6 +141,9 @@ class RemoveNote(DirectoryPaneCommand):
             query, dirName = result
             noteDir = self.pane.get_path()
             delete(noteDir + "/.notes/" + dirName)
+            noteDirList = iterdir(noteDir + "/.notes")
+            if len(noteDirList) == 0:
+                delete(noteDir + "/.notes")
         clear_status_message()
 
     def _suggest_directory(self, query):
