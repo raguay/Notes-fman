@@ -1,16 +1,19 @@
-from fman import DirectoryPaneCommand, show_alert, load_json, save_json
+from fman import DirectoryPaneCommand, show_alert, load_json, save_json, show_prompt, show_quicksearch, QuicksearchItem, show_status_message, clear_status_message
+from core.quicksearch_matchers import contains_chars
 from core.commands import _get_thirdparty_plugins, _THIRDPARTY_PLUGINS_DIR
 from fman.url import basename, dirname
 from fman.fs import exists, mkdir, touch
 
 NOTESDIR = None
-
+NOTESDIRNAME = 'notesdir'
 #
 # Class:        Notes
 #
 # Description:  This class is a subclass of DirectoryPaneCommand. It is 
 #               used to open a note file in the `.notes` subdirectory 
-#               in the user's defined editor.
+#               in the user's defined editor. It will create the directory 
+#               if it doesn't already exist. It will also save the new 
+#               directory in the list of note directories.
 #
 class Notes (DirectoryPaneCommand):
     def __call__(self, url=None):
@@ -20,7 +23,7 @@ class Notes (DirectoryPaneCommand):
         notePath = self.pane.get_path() + "/.notes/"
         if not exists(notePath):
             mkdir(notePath)
-            self.saveNotesDir(notePath)
+            saveNotesDir(notePath)
 
         #
         # Get either the current cursor file or the file
@@ -57,15 +60,45 @@ class Notes (DirectoryPaneCommand):
         else:
             self.pane.run_command("open_with_editor", args={'url': cfNoteFile})
 
-    def getNotesDir(self):
-        global NOTESDIR
-        if NOTESDIR == None:
-            NOTESDIR = load_json('notesdir',default=[])
-        return(NOTESDIR)
+ def getNotesDir():
+    global NOTESDIR, NOTESDIRNAME
+    if NOTESDIR == None:
+        NOTESDIR = load_json(NOTESDIRNAME,default=[])
+    return(NOTESDIR)
 
-    def saveNotesDir(self, newDir):
-        global NOTESDIR
-        notes = self.getNotesDir()
-        if not newDir in notes:
-            NOTESDIR = notes.append(newDir)
-            save_json('notesdir', NOTESDIR)
+def saveNotesDir(newDir):
+    global NOTESDIR
+    notes = getNotesDir()
+    if not newDir in notes:
+        NOTESDIR = notes.append(newDir)
+        saveNotesDirDisk()
+
+def saveNotesDirDisk();
+    global NOTESDIR, NOTESDIRNAME
+    save_json(NOTESDIRNAME, NOTESDIR)
+
+#
+# Class:        GoToNoteDir
+#
+# Description:  A Pane command to jump to a notes directory.
+#
+class GoToNoteDir(DirectoryPaneCommand):
+    #
+    # This directory command is for selecting a note directory 
+    # and going to that directory.
+    #
+    def __call__(self):
+        show_status_message('Select Note Directory')
+        result = show_quicksearch(self._suggest_directory)
+        if result:
+            query, dirName = result
+            self.pane.set_path(dirName)
+        clear_status_message()
+
+    def _suggest_directory(self, query):
+        directories = getNotesDir()
+        for dirName in directories:
+            match = contains_chars(dirName.lower(), query.lower())
+            if match or not query:
+                yield QuicksearchItem(dirName, highlight=match)
+
