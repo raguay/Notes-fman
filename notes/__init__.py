@@ -58,12 +58,14 @@ class Notes (DirectoryPaneCommand):
             self.pane.run_command("open_with_editor", args={'url': cfNoteFile})
 
     def getNotesDir(self):
+        global NOTESDIR
         if NOTESDIR == None:
             NOTESDIR = load_json('notesdir',default=[])
         return(NOTESDIR)
 
     def saveNotesDir(self, newDir):
+        global NOTESDIR
         notes = self.getNotesDir()
         if not newDir in notes:
-            notes.append(newDir)
-            save_json('notesdir', notes)
+            NOTESDIR = notes.append(newDir)
+            save_json('notesdir', NOTESDIR)
