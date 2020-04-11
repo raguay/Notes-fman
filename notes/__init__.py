@@ -178,7 +178,7 @@ class EditANote(DirectoryPaneCommand):
         ALLNOTES = []
         for notedir in getNotesDir():
             for notesindir in iterdir(notedir):
-                ALLNOTES.append(notedir + '/' + notesindir)
+                ALLNOTES.append(notedir + notesindir)
         result = show_quicksearch(self._suggest_note)
         if result:
             query, noteFile = result
