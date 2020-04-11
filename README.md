@@ -18,6 +18,13 @@ plugin will use the editor your select with that plugin to edit the notes file.
 Otherwise, it will use the fman's built-in `open_with_editor`  command to edit 
 the file with a system defined program.
 
+There are also some commands:
+
+Go To Note Dir:   This command will allow you to go to one of the note directories.
+Remove Note:      This command allows you to remove a note file in the current directory.
+
 ### Features
 
  - Attach notes to files and directories.
+ - Go to the note directories
+ - Remove a note file for a file or directory.
