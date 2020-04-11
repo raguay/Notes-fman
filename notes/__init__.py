@@ -2,7 +2,7 @@ from fman import DirectoryPaneCommand, show_alert, load_json, save_json, show_pr
 from core.quicksearch_matchers import contains_chars
 from core.commands import _get_thirdparty_plugins, _THIRDPARTY_PLUGINS_DIR
 from fman.url import basename, dirname
-from fman.fs import exists, mkdir, touch
+from fman.fs import exists, mkdir, touch, delete, iterdir
 
 NOTESDIR = None
 NOTESDIRNAME = 'notesdir'
@@ -60,12 +60,26 @@ class Notes (DirectoryPaneCommand):
         else:
             self.pane.run_command("open_with_editor", args={'url': cfNoteFile})
 
+#
+# Function:         getNotesDir
+#
+# Descriptions:     This function will retrieve the list of note directories. It 
+#                   loads the first time from the json list and then keeps the list 
+#                   in a global variable.
+#
 def getNotesDir():
     global NOTESDIR, NOTESDIRNAME
     if NOTESDIR == None:
         NOTESDIR = load_json(NOTESDIRNAME,default=[])
     return(NOTESDIR)
 
+#
+# Function:         saveNotesDir
+#
+# Description:      This function will save a new entry into the notes directory 
+#                   list if it isn't already in it. It then saves it to the disk 
+#                   as well.
+#
 def saveNotesDir(newDir):
     global NOTESDIR
     notes = getNotesDir()
@@ -73,6 +87,12 @@ def saveNotesDir(newDir):
         NOTESDIR = notes.append(newDir)
         saveNotesDirDisk()
 
+#
+# Function:         saveNotesDirDisk
+#
+# Description:      This function saves the list of note directories into a json 
+#                   file.
+#
 def saveNotesDirDisk():
     global NOTESDIR, NOTESDIRNAME
     save_json(NOTESDIRNAME, NOTESDIR)
@@ -101,4 +121,32 @@ class GoToNoteDir(DirectoryPaneCommand):
             match = contains_chars(dirName.lower(), query.lower())
             if match or not query:
                 yield QuicksearchItem(dirName, highlight=match)
+
+#
+# Class:        RemoveNote
+#
+# Description:  A Pane command will delete the selected note.
+#
+NOTEFILES = None
+class RemoveNote(DirectoryPaneCommand):
+    #
+    # This directory command is for selecting a note directory 
+    # and going to that directory.
+    #
+    def __call__(self):
+        show_status_message('Delete Note...')
+        NOTEFILES = None
+        result = show_quicksearch(self._suggest_directory)
+        if result:
+            query, dirName = result
+            delete(dirName)
+        clear_status_message()
+
+    def _suggest_directory(self, query):
+        noteDir = self.pane.get_path()
+        noteDirList = iterdir(noteDir + "/.notes")
+        for noteName in noteDirList:
+            match = contains_chars(noteName.lower(), query.lower())
+            if match or not query:
+                yield QuicksearchItem(noteName, highlight=match)
 
