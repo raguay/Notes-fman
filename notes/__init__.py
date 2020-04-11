@@ -60,7 +60,7 @@ class Notes (DirectoryPaneCommand):
         else:
             self.pane.run_command("open_with_editor", args={'url': cfNoteFile})
 
- def getNotesDir():
+def getNotesDir():
     global NOTESDIR, NOTESDIRNAME
     if NOTESDIR == None:
         NOTESDIR = load_json(NOTESDIRNAME,default=[])
