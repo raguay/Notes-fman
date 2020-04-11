@@ -159,3 +159,39 @@ class RemoveNote(DirectoryPaneCommand):
             if match or not query:
                 yield QuicksearchItem(noteName, highlight=match)
 
+#
+# Class:        EditANote
+#
+# Description:  A Pane command will allow the user to select from all
+#               note files to edit one.
+#
+ALLNOTES = None
+class EditANote(DirectoryPaneCommand):
+    #
+    # This directory command is for selecting a note in the current note directory 
+    # in order to delete it.
+    #
+    def __call__(self):
+        global ALLNOTES
+
+        show_status_message('Edit Note...')
+        ALLNOTES = []
+        for notedir in getNotesDir():
+            for notesindir in iterdir(notedir):
+                ALLNOTES.append(notesindir)
+        result = show_quicksearch(self._suggest_note)
+        if result:
+            query, noteFile = result
+            if (_THIRDPARTY_PLUGINS_DIR + "/OpenWithEditor") in _get_thirdparty_plugins():
+                self.pane.run_command("my_open_with_editor", args={'url': noteFile})
+            else:
+                self.pane.run_command("open_with_editor", args={'url': noteFile})
+        clear_status_message()
+
+    def _suggest_note(self, query):
+        global ALLNOTES
+        for noteName in ALLNOTES:
+            match = contains_chars(noteName.lower(), query.lower())
+            if match or not query:
+                yield QuicksearchItem(noteName, highlight=match)
+
