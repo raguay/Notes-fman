@@ -139,7 +139,8 @@ class RemoveNote(DirectoryPaneCommand):
         result = show_quicksearch(self._suggest_directory)
         if result:
             query, dirName = result
-            delete(dirName)
+            noteDir = self.pane.get_path()
+            delete(noteDir + "/.notes/" + dirName)
         clear_status_message()
 
     def _suggest_directory(self, query):
