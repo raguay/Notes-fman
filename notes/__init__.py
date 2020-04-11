@@ -11,7 +11,7 @@ NOTESDIRNAME = 'notesdir'
 #
 # Description:  This class is a subclass of DirectoryPaneCommand. It is 
 #               used to open a note file in the `.notes` subdirectory 
-#               in the user's defined editor. It will create the directory 
+#               in the user's defined editor. It will create the `.notes` directory 
 #               if it doesn't already exist. It will also save the new 
 #               directory in the list of note directories.
 #
@@ -21,9 +21,6 @@ class Notes (DirectoryPaneCommand):
         # Make sure the `.notes` directory exists. If not, create it.
         #
         notePath = self.pane.get_path() + "/.notes/"
-        if not exists(notePath):
-            mkdir(notePath)
-            saveNotesDir(notePath)
 
         #
         # Get either the current cursor file or the file
@@ -39,9 +36,11 @@ class Notes (DirectoryPaneCommand):
             #
             # Change the notes directory to the directory of the file sent.
             #
-            notePath = dirname(url) + "/.notes"
-            if not exists(notePath):
-                mkdir(notePath)
+            notePath = dirname(url) + "/.notes/"
+        
+        if not exists(notePath):
+            mkdir(notePath)
+            saveNotesDir(notePath)
  
         #
         # Open the note file for the file or directory.
@@ -127,16 +126,14 @@ class GoToNoteDir(DirectoryPaneCommand):
 #
 # Description:  A Pane command will delete the selected note.
 #
-NOTEFILES = None
 class RemoveNote(DirectoryPaneCommand):
     #
-    # This directory command is for selecting a note directory 
-    # and going to that directory.
+    # This directory command is for selecting a note in the current note directory 
+    # in order to delete it.
     #
     def __call__(self):
         show_status_message('Delete Note...')
-        NOTEFILES = None
-        result = show_quicksearch(self._suggest_directory)
+        result = show_quicksearch(self._suggest_note)
         if result:
             query, dirName = result
             noteDir = self.pane.get_path()
@@ -147,7 +144,7 @@ class RemoveNote(DirectoryPaneCommand):
                 delete(noteDir + "/.notes")
         clear_status_message()
 
-    def _suggest_directory(self, query):
+    def _suggest_note(self, query):
         noteDir = self.pane.get_path()
         noteDirList = iterdir(noteDir + "/.notes")
         for noteName in noteDirList:

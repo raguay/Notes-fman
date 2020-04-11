@@ -20,6 +20,7 @@ the file with a system defined program.
 
 There are also some commands:
 
+Notes:            This is the command tied to `<shift>+n` to create a note for the file or directory under the cursor.
 Go To Note Dir:   This command will allow you to go to one of the note directories.
 Remove Note:      This command allows you to remove a note file in the current directory.
 
