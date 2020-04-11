@@ -142,7 +142,8 @@ class RemoveNote(DirectoryPaneCommand):
             noteDir = self.pane.get_path()
             delete(noteDir + "/.notes/" + dirName)
             noteDirList = iterdir(noteDir + "/.notes")
-            if len(noteDirList) == 0:
+            numNotes = sum(1 for _ in noteDirList)
+            if numNotes == 0:
                 delete(noteDir + "/.notes")
         clear_status_message()
 
