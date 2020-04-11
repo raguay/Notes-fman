@@ -1,4 +1,4 @@
-from fman import DirectoryPaneCommand, show_alert
+from fman import DirectoryPaneCommand, show_alert, load_json, save_json
 from core.commands import _get_thirdparty_plugins, _THIRDPARTY_PLUGINS_DIR
 from fman.url import basename, dirname
 from fman.fs import exists, mkdir, touch
@@ -20,7 +20,7 @@ class Notes (DirectoryPaneCommand):
         notePath = self.pane.get_path() + "/.notes/"
         if not exists(notePath):
             mkdir(notePath)
-            saveNotesDir(notePath)
+            self.saveNotesDir(notePath)
 
         #
         # Get either the current cursor file or the file
@@ -63,7 +63,7 @@ class Notes (DirectoryPaneCommand):
         return(NOTESDIR)
 
     def saveNotesDir(self, newDir):
-        notes = getNotesDir()
+        notes = self.getNotesDir()
         if not newDir in notes:
             notes.append(newDir)
             save_json('notesdir', notes)
