@@ -148,7 +148,7 @@ class RemoveNote(DirectoryPaneCommand):
             numNotes = sum(1 for _ in noteDirList)
             if numNotes == 0:
                 delete(noteDir + "/.notes")
-                removeNoteDir(noteDir + "/.notes")
+                removeNoteDir(noteDir + "/.notes/")
         clear_status_message()
 
     def _suggest_note(self, query):
