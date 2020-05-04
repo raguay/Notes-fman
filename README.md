@@ -18,6 +18,9 @@ plugin will use the editor your select with that plugin to edit the notes file.
 Otherwise, it will use the fman's built-in `open_with_editor`  command to edit 
 the file with a system defined program.
 
+Also, if the [ProjectManager](https://github.com/raguay/ProjectManager) plugin is installed and the current file is in the 
+current project, then the note will be placed into the projects notes directory.
+
 There are also some commands:
 
 Notes:            This is the command tied to `<shift>+n` to create a note for the file or directory under the cursor.

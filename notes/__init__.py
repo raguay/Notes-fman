@@ -1,11 +1,13 @@
 from fman import DirectoryPaneCommand, show_alert, load_json, save_json, show_prompt, show_quicksearch, QuicksearchItem, show_status_message, clear_status_message
 from core.quicksearch_matchers import contains_chars
 from core.commands import _get_thirdparty_plugins, _THIRDPARTY_PLUGINS_DIR
-from fman.url import basename, dirname
+from fman.url import basename, dirname, join, as_human_readable, as_url
 from fman.fs import exists, mkdir, touch, delete, iterdir
+import os
 
 NOTESDIR = None
 NOTESDIRNAME = 'notesdir'
+PROJECTDIR = os.path.expanduser("~") + "/.currentprojectdir"
 #
 # Class:        Notes
 #
@@ -17,11 +19,20 @@ NOTESDIRNAME = 'notesdir'
 #
 class Notes (DirectoryPaneCommand):
     def __call__(self, url=None):
-        #
-        # Make sure the `.notes` directory exists. If not, create it.
-        #
-        notePath = self.pane.get_path() + "/.notes/"
+        pm = False
+        if(exists(PROJECTDIR)):
+            projDir = ""
+            with open(PROJECTDIR) as f:
+                projDir = f.read()
+            if not projDir == "":
+                pm = True
+                pnotesDir = projDir + "/.notes/"
 
+        #
+        # Get the current directory.
+        #
+        notePath = join(self.pane.get_path(), "/.notes/")
+ 
         #
         # Get either the current cursor file or the file
         # sent in the url command.
@@ -36,17 +47,28 @@ class Notes (DirectoryPaneCommand):
             #
             # Change the notes directory to the directory of the file sent.
             #
-            notePath = dirname(url) + "/.notes/"
-        
+            notePath = join(dirname(url), "/.notes/")
+
+        #
+        # If the current directory is under the current project, put 
+        # the notes in the project's note directory.
+        #
+        if pm:
+            if as_human_readable(notePath).find(projDir) != -1:
+                notePath = as_url(pnotesDir)
+
+        #
+        # If the notes directory doesn't exist, create it.
+        #
         if not exists(notePath):
             mkdir(notePath)
             saveNotesDir(notePath)
- 
+
         #
         # Open the note file for the file or directory.
         #
         cfName = basename(cursorFile)
-        cfNoteFile = notePath + cfName + ".md"
+        cfNoteFile = join(notePath, cfName + ".md")
 
         #
         # If the OpenWithEditor plugin is loaded, use it to edit 
