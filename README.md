@@ -23,12 +23,16 @@ current project, then the note will be placed into the projects notes directory.
 
 There are also some commands:
 
-Notes:            This is the command tied to `<shift>+n` to create a note for the file or directory under the cursor.
-Go To Note Dir:   This command will allow you to go to one of the note directories.
-Remove Note:      This command allows you to remove a note file in the current directory.
+| Command | Description |
+| --- | ------ |
+| Notes | This is the command tied to `<shift>+n` to create a note for the file or directory under the cursor. |
+|Go To Note Dir | This command will allow you to go to one of the note directories. |
+| Remove Note | This command allows you to remove a note file in the current directory. |
 
 ### Features
 
  - Attach notes to files and directories.
  - Go to the note directories
  - Remove a note file for a file or directory.
+ - Put notes in the Project Manager plugins notes directory.
+
