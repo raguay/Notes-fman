@@ -182,13 +182,13 @@ class RemoveNote(DirectoryPaneCommand):
                 yield QuicksearchItem(noteName, highlight=match)
 
 #
-# Class:        EditANote
+# Class:        EditNotes
 #
 # Description:  A Pane command will allow the user to select from all
 #               note files to edit one.
 #
 ALLNOTES = None
-class EditANote(DirectoryPaneCommand):
+class EditNotes(DirectoryPaneCommand):
     #
     # This directory command is for selecting a note in the current note directory 
     # in order to delete it.
